@@ -20,6 +20,7 @@
 #include <Arduino_LPS22HB.h> //Click here to get the library: http://librarymanager/All#Arduino_LPS22HB
 #include <Arduino_HTS221.h> //Click here to get the library: http://librarymanager/All#Arduino_HTS221
 #include <Arduino_APDS9960.h> //Click here to get the library: http://librarymanager/All#Arduino_APDS9960
+#include <ArduinoBLE.h>
 
 enum sensor_status {
     NOT_USED = -1,
@@ -48,6 +49,8 @@ typedef struct{
 /* Forward declarations ------------------------------------------------------- */
 float ei_get_sign(float number);
 
+bool flag = true;
+
 bool init_IMU(void);
 bool init_HTS(void);
 bool init_BARO(void);
@@ -74,6 +77,9 @@ static int fusion_ix = 0;
 /** Used sensors value function connected to label name */
 eiSensors sensors[] =
 {
+    // "gyrX", &data[0], &poll_gyr, &init_IMU, NOT_USED,
+    // "gyrY", &data[1], &poll_gyr, &init_IMU, NOT_USED,
+    // "gyrZ", &data[2], &poll_gyr, &init_IMU, NOT_USED,
     "accX", &data[0], &poll_acc, &init_IMU, NOT_USED,
     "accY", &data[1], &poll_acc, &init_IMU, NOT_USED,
     "accZ", &data[2], &poll_acc, &init_IMU, NOT_USED,
@@ -97,8 +103,8 @@ eiSensors sensors[] =
     "gesture", &data[17], &poll_APDS_gesture,&init_APDS, NOT_USED,
 };
 
-/*
-float idleThreshold = 0.0;
+
+// float idleThreshold = 0.0;
 BLEService fitness_service("e267751a-ae76-11eb-8529-0242ac130003");
 
 BLEIntCharacteristic exercise("2A19", BLERead | BLENotify); 
@@ -106,7 +112,7 @@ BLEByteCharacteristic start("19b10012-e8f2-537e-4f6c-d104768a1214", BLERead | BL
 BLEByteCharacteristic pause("6995b940-b6f4-11eb-8529-0242ac130003", BLERead | BLEWrite);
 
 BLEDevice central;
-*/
+
 
 /**
 * @brief      Arduino setup function
@@ -140,7 +146,7 @@ void setup()
     }
 
 
-    /* Connect to bluetooth
+    //Connect to bluetooth
           if (!BLE.begin()) {
       Serial.println("starting BLE failed!");
 
@@ -179,7 +185,7 @@ void setup()
         break;
       }
     }
-*/
+
 }
 
 /**
@@ -188,7 +194,7 @@ void setup()
 void loop()
 {
 
-  /*
+  
 
     if (central.connected()) 
     {
@@ -208,19 +214,20 @@ void loop()
          pause.setValue(0);
     }
 
-*/
-  flag = true;
+
+  // flag = true;
+
     if(flag == true) {
 
     // ei_printf("\nStarting inferencing in 1 seconds...\r\n");
 
     // delay(1000);
 
-      if (EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME != fusion_ix) {
-          ei_printf("ERR: Sensors don't match the sensors required in the model\r\n"
-          "Following sensors are required: %s\r\n", EI_CLASSIFIER_FUSION_AXES_STRING);
-          return;
-      }
+      // if (EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME != fusion_ix) {
+      //     ei_printf("ERR: Sensors don't match the sensors required in the model\r\n"
+      //     "Following sensors are required: %s\r\n", EI_CLASSIFIER_FUSION_AXES_STRING);
+      //     return;
+      // }
 
       ei_printf("Sampling...\r\n");
 
@@ -274,37 +281,37 @@ void loop()
       }
 #if EI_CLASSIFIER_HAS_ANOMALY == 1
     ei_printf("    anomaly score: %.3f\n", result.anomaly);
-        if(result.anomaly < threshold)
+        if(true)
         {
             for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++)  
               {      
                  ei_printf("    %s: %.5f\n", result.classification[ix].label, result.classification[ix].value);  
-                 if(result.classification[ix].value > confidence )
+                 if(true)
                  {
-                     Label = String(result.classification[ix].label);
-                     Serial.println(Label);
-                    //  if (Label == "Step")
-                    //  {
-                    //    if (central.connected()) exercise.writeValue(0);
-                    //    Serial.println("Data sent");
-                    //  }
-                    //  else if (Label == "Squats")
-                    //  {
-                    //     if (central.connected()) exercise.writeValue(1);
-                    //     Serial.println("Data sent");
-                    //  }
-                    //  else if (Label == "Pushup")
-                    //  {
-                    //     if (central.connected()) exercise.writeValue(2);
-                    //     Serial.println("Data sent");
-                    //  }
+                     // Label = String(result.classification[ix].label);
+                     Serial.println(String(result.classification[ix].label));
+                     if (String(result.classification[ix].label) == "Step")
+                     {
+                       if (central.connected()) exercise.writeValue(0);
+                       Serial.println("Data sent");
+                     }
+                     else if (String(result.classification[ix].label) == "Squats")
+                     {
+                        if (central.connected()) exercise.writeValue(1);
+                        Serial.println("Data sent");
+                     }
+                     else if (String(result.classification[ix].label) == "Pushup")
+                     {
+                        if (central.connected()) exercise.writeValue(2);
+                        Serial.println("Data sent");
+                     }
         
                   }
                }
       
          }
-        
-        }    
+    }
+         
 #endif
     }
 
