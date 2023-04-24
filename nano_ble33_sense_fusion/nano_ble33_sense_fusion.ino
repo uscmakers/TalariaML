@@ -97,6 +97,17 @@ eiSensors sensors[] =
     "gesture", &data[17], &poll_APDS_gesture,&init_APDS, NOT_USED,
 };
 
+/*
+float idleThreshold = 0.0;
+BLEService fitness_service("e267751a-ae76-11eb-8529-0242ac130003");
+
+BLEIntCharacteristic exercise("2A19", BLERead | BLENotify); 
+BLEByteCharacteristic start("19b10012-e8f2-537e-4f6c-d104768a1214", BLERead | BLEWrite);
+BLEByteCharacteristic pause("6995b940-b6f4-11eb-8529-0242ac130003", BLERead | BLEWrite);
+
+BLEDevice central;
+*/
+
 /**
 * @brief      Arduino setup function
 */
@@ -127,6 +138,48 @@ void setup()
             }
         }
     }
+
+
+    /* Connect to bluetooth
+          if (!BLE.begin()) {
+      Serial.println("starting BLE failed!");
+
+      while (1);
+    }
+
+    BLE.setLocalName("Talaria");
+    
+    BLE.setAdvertisedService(fitness_service);
+
+    //Karakteristike
+    
+    start.setValue(0);
+    pause.setValue(0);
+
+    
+    fitness_service.addCharacteristic(exercise); 
+    fitness_service.addCharacteristic(start);
+    fitness_service.addCharacteristic(pause);
+
+    BLE.addService(fitness_service);
+
+    BLE.advertise();
+
+    Serial.println("Bluetooth device active, waiting for connections...");
+
+    while(1) {
+      central = BLE.central();
+      if (central) {
+        Serial.print("Connected to central: ");
+        // print the central's BT address:
+        Serial.println(central.address());
+        // turn on the LED to indicate the connection:
+        digitalWrite(LED_BUILTIN, HIGH);
+
+        break;
+      }
+    }
+*/
 }
 
 /**
@@ -134,70 +187,127 @@ void setup()
 */
 void loop()
 {
-    ei_printf("\nStarting inferencing in 2 seconds...\r\n");
 
-    delay(2000);
+  /*
 
-    if (EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME != fusion_ix) {
-        ei_printf("ERR: Sensors don't match the sensors required in the model\r\n"
-        "Following sensors are required: %s\r\n", EI_CLASSIFIER_FUSION_AXES_STRING);
-        return;
+    if (central.connected()) 
+    {
+        start.read();
+        pause.read();
+    }
+    if (start.value()) 
+    {
+        flag = true;
+        //Serial.println("Started");
+        start.setValue(0);
+    }
+    if(pause.value()) 
+    {
+         flag = false;
+         //Serial.println("Stopped");
+         pause.setValue(0);
     }
 
-    ei_printf("Sampling...\r\n");
+*/
+  flag = true;
+    if(flag == true) {
 
-    // Allocate a buffer here for the values we'll read from the sensor
-    float buffer[EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE] = { 0 };
+    // ei_printf("\nStarting inferencing in 1 seconds...\r\n");
 
-    for (size_t ix = 0; ix < EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE; ix += EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME) {
-        // Determine the next tick (and then sleep later)
-        int64_t next_tick = (int64_t)micros() + ((int64_t)EI_CLASSIFIER_INTERVAL_MS * 1000);
+    // delay(1000);
 
-        for(int i = 0; i < fusion_ix; i++) {
-            if (sensors[fusion_sensors[i]].status == INIT) {
-                sensors[fusion_sensors[i]].poll_sensor();
-                sensors[fusion_sensors[i]].status = SAMPLED;
-            }
-            if (sensors[fusion_sensors[i]].status == SAMPLED) {
-                buffer[ix + i] = *sensors[fusion_sensors[i]].value;
-                sensors[fusion_sensors[i]].status = INIT;
-            }
-        }
+      if (EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME != fusion_ix) {
+          ei_printf("ERR: Sensors don't match the sensors required in the model\r\n"
+          "Following sensors are required: %s\r\n", EI_CLASSIFIER_FUSION_AXES_STRING);
+          return;
+      }
 
-        int64_t wait_time = next_tick - (int64_t)micros();
+      ei_printf("Sampling...\r\n");
 
-        if(wait_time > 0) {
-            delayMicroseconds(wait_time);
-        }
-    }
+      // Allocate a buffer here for the values we'll read from the sensor
+      float buffer[EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE] = { 0 };
 
-    // Turn the raw buffer in a signal which we can the classify
-    signal_t signal;
-    int err = numpy::signal_from_buffer(buffer, EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE, &signal);
-    if (err != 0) {
-        ei_printf("ERR:(%d)\r\n", err);
-        return;
-    }
+      for (size_t ix = 0; ix < EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE; ix += EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME) {
+          // Determine the next tick (and then sleep later)
+          int64_t next_tick = (int64_t)micros() + ((int64_t)EI_CLASSIFIER_INTERVAL_MS * 1000);
 
-    // Run the classifier
-    ei_impulse_result_t result = { 0 };
+          for(int i = 0; i < fusion_ix; i++) {
+              if (sensors[fusion_sensors[i]].status == INIT) {
+                  sensors[fusion_sensors[i]].poll_sensor();
+                  sensors[fusion_sensors[i]].status = SAMPLED;
+              }
+              if (sensors[fusion_sensors[i]].status == SAMPLED) {
+                  buffer[ix + i] = *sensors[fusion_sensors[i]].value;
+                  sensors[fusion_sensors[i]].status = INIT;
+              }
+          }
 
-    err = run_classifier(&signal, &result, debug_nn);
-    if (err != EI_IMPULSE_OK) {
-        ei_printf("ERR:(%d)\r\n", err);
-        return;
-    }
+          int64_t wait_time = next_tick - (int64_t)micros();
 
-    // print the predictions
-    ei_printf("Predictions (DSP: %d ms., Classification: %d ms., Anomaly: %d ms.):\r\n",
-        result.timing.dsp, result.timing.classification, result.timing.anomaly);
-    for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
-        ei_printf("%s: %.5f\r\n", result.classification[ix].label, result.classification[ix].value);
-    }
+          if(wait_time > 0) {
+              delayMicroseconds(wait_time);
+          }
+      }
+
+      // Turn the raw buffer in a signal which we can the classify
+      signal_t signal;
+      int err = numpy::signal_from_buffer(buffer, EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE, &signal);
+      if (err != 0) {
+          ei_printf("ERR:(%d)\r\n", err);
+          return;
+      }
+
+      // Run the classifier
+      ei_impulse_result_t result = { 0 };
+
+      err = run_classifier(&signal, &result, debug_nn);
+      if (err != EI_IMPULSE_OK) {
+          ei_printf("ERR:(%d)\r\n", err);
+          return;
+      }
+
+      // print the predictions
+      ei_printf("Predictions (DSP: %d ms., Classification: %d ms., Anomaly: %d ms.):\r\n",
+          result.timing.dsp, result.timing.classification, result.timing.anomaly);
+      for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
+          ei_printf("%s: %.5f\r\n", result.classification[ix].label, result.classification[ix].value);
+      }
 #if EI_CLASSIFIER_HAS_ANOMALY == 1
-    ei_printf("    anomaly score: %.3f\r\n", result.anomaly);
+    ei_printf("    anomaly score: %.3f\n", result.anomaly);
+        if(result.anomaly < threshold)
+        {
+            for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++)  
+              {      
+                 ei_printf("    %s: %.5f\n", result.classification[ix].label, result.classification[ix].value);  
+                 if(result.classification[ix].value > confidence )
+                 {
+                     Label = String(result.classification[ix].label);
+                     Serial.println(Label);
+                    //  if (Label == "Step")
+                    //  {
+                    //    if (central.connected()) exercise.writeValue(0);
+                    //    Serial.println("Data sent");
+                    //  }
+                    //  else if (Label == "Squats")
+                    //  {
+                    //     if (central.connected()) exercise.writeValue(1);
+                    //     Serial.println("Data sent");
+                    //  }
+                    //  else if (Label == "Pushup")
+                    //  {
+                    //     if (central.connected()) exercise.writeValue(2);
+                    //     Serial.println("Data sent");
+                    //  }
+        
+                  }
+               }
+      
+         }
+        
+        }    
 #endif
-}
+    }
+
 
 #if !defined(EI_CLASSIFIER_SENSOR) || (EI_CLASSIFIER_SENSOR != EI_CLASSIFIER_SENSOR_FUSION && EI_CLASSIFIER_SENSOR != EI_CLASSIFIER_SENSOR_ACCELEROMETER)
 #error "Invalid model for current sensor"
