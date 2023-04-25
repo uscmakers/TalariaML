@@ -4,6 +4,7 @@ var bluetoothDevice;
 var exerciseValue;
 var startValue;
 var stopValue;
+var modeValue;
 var resetValue;
 
 var mode = "Voltage";
@@ -55,7 +56,8 @@ function connectToBluetoothDevice(device) {
                 exerciseValue = characteristic[0];
                 startValue = characteristic[1];
                 stopValue = characteristic[2];
-                resetValue = characteristic[3];
+                modeValue = characteristic[3];
+                resetValue = characteristic[4];
             })
 
         .catch(error => {
@@ -134,5 +136,20 @@ function reset() {
 
 function trackVoltage() {
     mode = "Voltage";
-    stop();
+    $("#stat-name").text("Voltage");
+}
+
+function trackSteps() {
+    mode = "Steps";
+    $("#stat-name").text("Steps");
+    console.log($("#stat-name").text);
+    // var arr = new Int8Array([21, 31]);
+    // return modeValue.writeValueWithResponse(arr).then(response => {
+    //     console.log(exerciseValue)
+    //     return exerciseValue.startNotifications().then(_ => {
+    //         console.log('> Notifications started');
+    //         exerciseValue.addEventListener('characteristicvaluechanged', handleNotifications);
+    //     });
+    // });
+
 }
