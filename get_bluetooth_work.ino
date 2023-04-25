@@ -15,28 +15,28 @@
  */
 
 /* Includes ---------------------------------------------------------------- */
-#include <Fitness_App_inferencing.h>
-#include <Arduino_LSM9DS1.h> //Click here to get the library: http://librarymanager/All#Arduino_LSM9DS1
-#include <Arduino_LPS22HB.h> //Click here to get the library: http://librarymanager/All#Arduino_LPS22HB
-#include <Arduino_HTS221.h> //Click here to get the library: http://librarymanager/All#Arduino_HTS221
-#include <Arduino_APDS9960.h> //Click here to get the library: http://librarymanager/All#Arduino_APDS9960
+// #include <Fitness_App_inferencing.h>
+// #include <Arduino_LSM9DS1.h> //Click here to get the library: http://librarymanager/All#Arduino_LSM9DS1
+// #include <Arduino_LPS22HB.h> //Click here to get the library: http://librarymanager/All#Arduino_LPS22HB
+// #include <Arduino_HTS221.h> //Click here to get the library: http://librarymanager/All#Arduino_HTS221
+// #include <Arduino_APDS9960.h> //Click here to get the library: http://librarymanager/All#Arduino_APDS9960
 #include <ArduinoBLE.h>
 
-enum sensor_status {
-    NOT_USED = -1,
-    NOT_INIT,
-    INIT,
-    SAMPLED
-};
+// enum sensor_status {
+//     NOT_USED = -1,
+//     NOT_INIT,
+//     INIT,
+//     SAMPLED
+// };
 
 /** Struct to link sensor axis name to sensor value function */
-typedef struct{
-    const char *name;
-    float *value;
-    uint8_t (*poll_sensor)(void);
-    bool (*init_sensor)(void);    
-    sensor_status status;
-} eiSensors;
+// typedef struct{
+//     const char *name;
+//     float *value;
+//     uint8_t (*poll_sensor)(void);
+//     bool (*init_sensor)(void);    
+//     sensor_status status;
+// } eiSensors;
 
 /* Constant defines -------------------------------------------------------- */
 #define CONVERT_G_TO_MS2    9.80665f
@@ -66,7 +66,7 @@ bool flag = true;
 // uint8_t poll_APDS_gesture(void);
 
 /* Private variables ------------------------------------------------------- */
-static const bool debug_nn = false; // Set this to true to see e.g. features generated from the raw signal
+//static const bool debug_nn = false; // Set this to true to see e.g. features generated from the raw signal
 
 // static float data[N_SENSORS];
 // static bool ei_connect_fusion_list(const char *input_list);
@@ -120,9 +120,9 @@ BLEDevice central;
 void setup()
 {
     /* Init serial */
-    Serial.begin(115200);
+    //Serial.begin(115200);
     // comment out the below line to cancel the wait for USB connection (needed for native USB)
-    while (!Serial);
+    //while (!Serial);
     // Serial.println("Edge Impulse Sensor Fusion Inference\r\n");
 
     // /* Connect used sensors */
@@ -148,7 +148,7 @@ void setup()
 
     //Connect to bluetooth
           if (!BLE.begin()) {
-      Serial.println("starting BLE failed!");
+      //Serial.println("starting BLE failed!");
 
       while (1);
     }
@@ -171,14 +171,16 @@ void setup()
 
     BLE.advertise();
 
-    Serial.println("Bluetooth device active, waiting for connections...");
+    //Serial.println("Bluetooth device active, waiting for connections...");
 
     while(1) {
       central = BLE.central();
+      // Serial.println("Trying to connect to central");
+      //Serial.println(BLE.central());
       if (central) {
-        Serial.print("Connected to central: ");
+        //Serial.print("Connected to central: ");
         // print the central's BT address:
-        Serial.println(central.address());
+        //Serial.println(central.address());
         // turn on the LED to indicate the connection:
         digitalWrite(LED_BUILTIN, HIGH);
 
@@ -299,12 +301,12 @@ void loop()
                     //  else if (String(result.classification[ix].label) == "Squats")
                     //  {
                         if (central.connected()) exercise.writeValue(1);
-                        Serial.println("Data sent");
+                        //Serial.println("Data sent");
                     // }
                     //  else if (String(result.classification[ix].label) == "Pushup")
                     //  {
                         if (central.connected()) exercise.writeValue(2);
-                        Serial.println("Data sent");
+                        // Serial.println("Data sent");
                     // }
         
                   }
@@ -313,7 +315,7 @@ void loop()
          }
     }
          
-#endif
+// #endif
     }
 
 
