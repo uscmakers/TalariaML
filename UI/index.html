@@ -5,7 +5,171 @@
 <head>
 
     <meta charset="UTF-8">
-    <title>GetFit</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap" rel="stylesheet">
+    <title>Talaria</title>
+
+    <style>
+        :root {
+            --white: #f6f3f4;
+            --beige: #f6eada;
+            --brown: #c88d78;
+            --dark-brown: #a97056;
+            --green: #6f8142;
+            --dark-green: #30492f;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0px;
+            padding: 0px;
+            background-color: var(--beige);
+        }
+        
+        #header {
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            background-color: var(--dark-brown);
+            margin: 0px;
+            width: 100%;
+            position: fixed;
+            top: 0px;
+        }
+        
+        #header h1 {
+            font-size: 20px;
+            color: var(--white);
+            margin: 0;
+        }
+        
+        #big {
+            font-size: 30px;
+        }
+                
+        #content {
+            padding: 10px;
+            margin: 0px;
+            margin-top: 60px;
+            background-color: var(--white);
+        }
+        
+        #heading {
+            text-align: center;
+            margin-top: 5px;
+        }
+        
+        .row:after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+        
+        #product-right {
+            display: none;
+        }
+        
+        #stats {
+            width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .stat {
+            background-color: var(--brown);
+            float: left;
+            padding: 10px;
+            box-sizing: border-box;
+            width: 46%;
+            margin: 2%;
+            border: 1px solid var(--dark-brown);
+            box-shadow: 0.3rem 0.3rem 0.6rem lightgray, -0.2rem -0.2rem 0.5rem gray;
+        }
+        
+        .stat h3 {
+            text-align: center;
+            margin-top: 5px;
+            margin-bottom: 0px;
+        }
+
+        .stat p {
+            text-align: center;
+            margin-top: 5px;
+            margin-bottom: 0px;
+        }
+
+        .number {
+            text-align: center;
+            margin-top: 5px;
+            margin-bottom: 0px;
+            font-size: 50px;
+            font-weight: bold;
+        }
+        
+        @media (min-width: 768px) {
+            .column {
+                width: 48%;
+                float: left;
+                margin: 1%;
+            }
+            #related-header {
+                width: 98%;
+                float: left;
+                margin-left: 1%;
+                margin-right: 1%;
+            }
+            #related-header h2 {
+                margin-top: 15px;
+                margin-bottom: 7px;
+            }
+            .column p {
+                font-size: 14px;
+            }
+            #reviews {
+                font-size: revert;
+            }
+            #heading {
+                display: none;
+            }
+            #product-right {
+                display: block;
+                margin: 0px;
+            }
+            #price {
+                margin-top: 5px;
+                margin-bottom: 10px;
+            }
+            /* .stat {
+                width: 48%;
+                margin: 1%;
+            } */
+        }
+        
+        @media (min-width: 992px) {
+            /* .stat {
+                width: 24%;
+                margin: 0.5%;
+            } */
+            .column p {
+                font-size: revert;
+            }
+        }
+        
+        @media (min-width: 1000px) {
+            #content {
+                width: 980px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+    </style>
+
+    <!-- <meta charset="UTF-8">
+    <title>Talaria</title>
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -19,24 +183,62 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-
-
+    <link rel="stylesheet" href="assets/css/style.css"> -->
 
 </head>
 
-<body translate="no" onload="connect()">
+<body onload="connect()">
+    <div id="header">
+        <h1><span id="big">Talaria</span></h1>
+    </div>
 
-    <div class="components" id="home">
-        <div class="hello">
-            Hello <label id = "hello_name_value">User</label>
+    <div id="content">
+        <!-- <div id="related-header">
+            <h2>Today's Activity</h2>
+        </div> -->
+
+        <div class="row">
+            <div class="column">
+                <div class="stat">
+                    <h3>Steps</h3>
+                    <h4 class="number">0</h4>
+                </div>
+                <div class="stat">
+                    <h3>Voltage</h3>
+                    <h4 class="number">0</h4>
+                </div>
+
+            </div>
         </div>
+
+        <div class="row">
+            <div class="column">
+                <button onclick="start()">Start</button>
+                <button onclick="stop()">Stop</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                <button onclick="requestDevice()">Connect to Arduino</button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script id="rendered-js" src="assets/js/script.js">
+    </script>
+
+</body>
+
+<body translate="no" onload="connect()">
+    <div class="components" id="home">
         <div class="header__info">
-            Start Your <label>Workout</label>
+            Welcome to Talaria
         </div>
 
         <div class="btn__main">
-            <img src="assets/img/icon.svg">
             <div class="btn" id="startBtn" onclick="start()">Start Workout</div>
         </div>
 
@@ -48,36 +250,10 @@
             <ion-icon name="arrow-forward-outline"></ion-icon>
         </div>
         <div class="todays_activity calorie">
-            <div class="exercise__names__calories">CALORIES<br><label id="todays_calorie">0</label></div>
+            <div class="exercise__names">VOLTAGE<br><label id="todays_calories">0</label></div>
         </div>
         <div class="todays_activity pushup">
-            <div class="exercise__names">PUSHUPS<br><label id="todays_pushups">0</label></div>
-        </div>
-        <div class="todays_activity squats">
-            <div class="exercise__names">SQUATS<br><label id="todays_squats">0</label></div>
-        </div>
-        <div class="todays_activity armcircles">
-            <div class="exercise__names__armcircles">ARMCIRCLES<br><label id="todays_armcircles">0</label></div>
-        </div>
-
-        <!--Weekly Stats-->
-        <div class="weekly__main">
-            Weekly Activity
-        </div>
-        <div class="weekly__details">
-            <ion-icon name="arrow-forward-outline"></ion-icon>
-        </div>
-        <div class="weekday mon" onclick="showDayActivity('monday')">
-            <p>MON</p>
-        </div>
-        <div class="weekday tue" onclick="showDayActivity('tuesday')">
-            <p>TUE</p>
-        </div>
-        <div class="weekday wed" onclick="showDayActivity('wednesday')">
-            <p>WED</p>
-        </div>
-        <div class="weekday thu" onclick="showDayActivity('thursday')">
-            <p>THU</p>
+            <div class="exercise__names">STEPS<br><label id="todays_pushups">0</label></div>
         </div>
 
         <!--Navbar-->
@@ -107,25 +283,6 @@
             <div class="activity__card" id="activity__pushup">
                 <div class="exercise__name">PUSHUP<br><label id="pushups__count">0</label></div>
 
-            </div>
-            <div class="activity__card" id="activity__squats">
-                <div class="exercise__name">SQUATS<br><label id="squats__count">0</label></div>
-
-            </div>
-            <div class="activity__card" id="activity__armcircles">
-                <div class="exercise__name">ARMCIRCLES<br><label id="armcircles__count">0</label></div>
-
-            </div>
-            <div class="activity__card" id="activity__situp">
-                <div class="exercise__name">SITUP<br><label id="situp__count">0</label></div>
-
-            </div>
-            <div class="activity__card" id="activity__pullup">
-                <div class="exercise__name">PULLUP<br><label id="pullup__count">0</label></div>
-
-            </div>
-            <div class="activity__card" id="activity__planck">
-                <div class="exercise__name">PLANCK<br><label id="planck__count">0</label></div>
             </div>
         </div>
 
@@ -185,27 +342,6 @@
         <div id="activity">
             <div class="activity__card" id="activity__pushup">
                 <div class="exercise__name">PUSHUP<br><label id="day__pushups__count">0</label></div>
-
-            </div>
-            <div class="activity__card" id="activity__squats">
-                <div class="exercise__name">SQUATS<br><label id="day__squats__count">0</label></div>
-
-            </div>
-            <div class="activity__card" id="activity__armcircles">
-                <div class="exercise__name">ARMCIRCLES<br><label id="day__armcircles__count">0</label></div>
-
-            </div>
-            <div class="activity__card" id="activity__situp">
-                <div class="exercise__name">SITUP<br><label id="day__situp__count">0</label></div>
-
-            </div>
-            <div class="activity__card" id="activity__pullup">
-                <div class="exercise__name">PULLUP<br><label id="day__pullup__count">0</label></div>
-
-            </div>
-            <div class="activity__card" id="activity__planck">
-                <div class="exercise__name">PLANCK<br><label id="day__planck__count">0</label></div>
-            </div>
         </div>
         <div class="icon" id="navbar__activity">
             <div class="icon__home">
@@ -229,16 +365,6 @@
             <ion-icon name="arrow-back-outline" id="arrow__icon"></ion-icon>
             <p id="day_name">Personal <label> Information</label></p>
         </div>
-        <div class="search__name" id="name">Name</div>
-        <input type="text" class="search__input" id="name_value" placeholder="Name">
-        <div class="search__name" id="gender">Gender</div>
-        <input type="text" class="search__input" id="gender_value" placeholder="Gender">
-        <div class="search__name" id="weight">Weight</div>
-        <input type="text" class="search__input" id="weight_value" placeholder="Weight in kg">
-        <div class="search__name" id="height">Height</div>
-        <input type="text" class="search__input" id="height_value" placeholder="Height in cm">
-        <div class="btn btn__secondary" id="submitBtn" onclick="submit()">Submit</div>
-
 
         <div class="icon" id="navbar__activity">
             <div class="icon__home">

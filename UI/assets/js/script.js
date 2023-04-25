@@ -108,7 +108,7 @@ function connect() {
         .then(devices => {
             for (const device of devices) {
                 console.log('  > ' + device.name + ' (' + device.id + ')');
-                if (device.name == "Get-Fit" || device.name == "Arduino" || device.id == "e2D6KSLwZCC8CzY+W+5FjA==") {
+                if (device.name == "Talaria" || device.name == "Arduino" || device.id == "e2D6KSLwZCC8CzY+W+5FjA==") {
                     state = false;
                     connectToBluetoothDevice(device)
                 }
@@ -305,31 +305,31 @@ function submit() {
 }
 
 
-var nameRef = firebase.database().ref('personal/name')
-nameRef.on('value', (snapshot) => {
-    const data = snapshot.val();
-    $('#name_value').val(data);
-    $('#hello_name_value').text(data);
+// var nameRef = firebase.database().ref('personal/name')
+// nameRef.on('value', (snapshot) => {
+//     const data = snapshot.val();
+//     $('#name_value').val(data);
+//     $('#hello_name_value').text(data);
 
-});
+// });
 
-var genderRef = firebase.database().ref('personal/gender')
-genderRef.on('value', (snapshot) => {
-    const data = snapshot.val();
-    $('#gender_value').val(data);
+// var genderRef = firebase.database().ref('personal/gender')
+// genderRef.on('value', (snapshot) => {
+//     const data = snapshot.val();
+//     $('#gender_value').val(data);
 
-});
+// });
 
-var weightRef = firebase.database().ref('personal/weight')
-weightRef.on('value', (snapshot) => {
-    const data = snapshot.val();
-    $('#weight_value').val(data);
+// var weightRef = firebase.database().ref('personal/weight')
+// weightRef.on('value', (snapshot) => {
+//     const data = snapshot.val();
+//     $('#weight_value').val(data);
 
-});
+// });
 
-var heightRef = firebase.database().ref('personal/height')
-heightRef.on('value', (snapshot) => {
-    const data = snapshot.val();
-    $('#height_value').val(data);
+// var heightRef = firebase.database().ref('personal/height')
+// heightRef.on('value', (snapshot) => {
+//     const data = snapshot.val();
+//     $('#height_value').val(data);
 
-});
+// });

@@ -3,11 +3,18 @@
     --primary: #5868E0;
     --primaryc: #6d5dfc;
     --primary-dark: #5868E0;
-    --white: #FFFFFF;
-    --greyLight-1: #E4EBF5;
+    --greyLight-1: #f6f3f4;
     --greyLight-2: #c8d0e7;
     --greyLight-3: #bec8e4;
     --greyDark: #9baacf;
+
+    --white: #f6f3f4;
+    --beige: #f6eada;
+    --brown: #c88d78;
+    --dark-brown: #a97056;
+    --green: #6f8142;
+    --dark-green: #30492f;
+
     width: 100%;
     height: 100%;
 }
@@ -24,7 +31,7 @@ html {
     box-sizing: border-box;
     font-size: 62.5%;
     overflow-y: scroll;
-    background: var(--greyLight-1);
+    background: var(--beige);
 }
 
 @media screen and (max-width: 900px) {
