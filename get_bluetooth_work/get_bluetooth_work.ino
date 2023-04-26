@@ -84,7 +84,7 @@ void loop()
     // currMode = mode.value();
 
     if(true) {
-      int value = analogRead(sensoroutput) - 60;  // function to read analog voltage from sensor
+      int value = analogRead(sensoroutput)/2;  // function to read analog voltage from sensor
       Serial.println(value);
       // if (value >= idleThreshold && !startStep) {
       //   startStep = true;
