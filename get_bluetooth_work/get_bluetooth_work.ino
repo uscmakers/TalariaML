@@ -1,7 +1,5 @@
 #include <ArduinoBLE.h>
 
-
-
 BLEService fitness_service("e267751a-ae76-11eb-8529-0242ac130003");
 
 BLEIntCharacteristic exercise("2A19", BLERead | BLENotify); 
@@ -10,6 +8,14 @@ BLEByteCharacteristic pause("6995b940-b6f4-11eb-8529-0242ac130003", BLERead | BL
 // BLEByteCharacteristic mode("6995b940-b6f4-11eb-8529-0242ac130004", BLERead | BLEWrite); // 0 voltage, 1 steps
 
 BLEDevice central;
+
+
+bool startCounting = true;
+int sensoroutput = 3; // the analog pin connected to the sensor
+int idleThreshold = 100;
+int numSteps = 0;
+bool startStep = false;
+int currMode = 0;
 
 /**
 * @brief      Arduino setup function
@@ -48,13 +54,6 @@ void setup()
   }
 
 }
-
-bool startCounting = true;
-int sensoroutput = 3; // the analog pin connected to the sensor
-int idleThreshold = 100;
-int numSteps = 0;
-bool startStep = false;
-int currMode = 0;
 
 
 void loop()
