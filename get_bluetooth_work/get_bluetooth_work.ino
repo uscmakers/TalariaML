@@ -22,7 +22,6 @@ int currMode = 0;
 */
 void setup()
 {
-  pinMode(sensoroutput, INPUT);   // this function is used to declare led connected pin as output
 
   //Connect to bluetooth
   if (!BLE.begin()) {
@@ -53,6 +52,9 @@ void setup()
     }
   }
 
+    pinMode(sensoroutput, INPUT);   // this function is used to declare led connected pin as output
+
+
 }
 
 
@@ -81,22 +83,23 @@ void loop()
     }
     // currMode = mode.value();
 
-    if(startCounting) {
-      int value = analogRead(sensoroutput);  // function to read analog voltage from sensor
-      if (value >= idleThreshold && !startStep) {
-        startStep = true;
-      } else if (value < idleThreshold && startStep) {
-        startStep = false;
-        numSteps++;
-      }
+    if(true) {
+      int value = analogRead(sensoroutput) - 60;  // function to read analog voltage from sensor
+      Serial.println(value);
+      // if (value >= idleThreshold && !startStep) {
+      //   startStep = true;
+      // } else if (value < idleThreshold && startStep) {
+      //   startStep = false;
+      //   numSteps++;
+      // }
 
-      if (currMode == 0) { // voltage
+      // if (currMode == 0) { // voltage
         if (central.connected())
           exercise.writeValue(value);          
-      } else {
-        if (central.connected())
-          exercise.writeValue(numSteps);          
-      }
+      // } else {
+      //   if (central.connected())
+      //     exercise.writeValue(numSteps);          
+      // }
       delay(100);
     }
 }

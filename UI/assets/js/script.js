@@ -8,6 +8,9 @@ var modeValue;
 var resetValue;
 
 var mode = "Voltage";
+var idleThreshold = 100;
+var numSteps = 0;
+var startStep = false;
 
 function connect() {
     var state = true;
@@ -93,6 +96,8 @@ function requestDevice() {
 
 
 function start() {
+    numSteps = 0;
+    startStep = false;
     var arr = new Int8Array([21, 31]);
     return startValue.writeValueWithResponse(arr).then(response => {
         console.log(exerciseValue)
@@ -106,12 +111,29 @@ function start() {
 
 
 function handleNotifications(event) {
-    let value = event.target.value.getInt8();
-    console.log("received" + value);
-    $("#steps").text(value);
+    let value = event.target.value.getInt8() + 60;
+    console.log("sensor value " + value);
+    var voltage = Math.round(value / 60.0 * 100) / 100
+    if (value >= idleThreshold && !startStep) {
+        startStep = true;
+    } else if (value < idleThreshold && startStep) {
+        startStep = false;
+        numSteps++;
+    }
+
+    // TODO: step/voltage calculations here instead of in Arduino
+    if (mode == "Steps") {
+        console.log("HELLO")
+        $("#stat-value").text(numSteps);
+    } else {
+        $("#stat-value").text(voltage);
+    }
+    
 }
 
 function stop() {
+    numSteps = 0;
+    startStep = false;
     var arr = new Int8Array([21, 31]);
     return stopValue.writeValueWithResponse(arr).then(response => {
         return exerciseValue.stopNotifications()
